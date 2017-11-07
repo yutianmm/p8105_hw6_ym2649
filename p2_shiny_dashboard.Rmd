@@ -1,0 +1,86 @@
+---
+title: "p2_shinny_dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: row
+  runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+```{r read_library}
+library(readr)
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+library(plotly)
+```
+
+```{r clean_data}
+instacart = read_csv("../data/instacart_train_data.csv.zip",col_types="iiiiiciiiiciicc") 
+```
+
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+departments = instacart %>% distinct(department) %>% pull()
+
+# selectInput widget
+selectInput("department_choice", label = h3("Select department"),
+            choices = departments, selected = "produce")
+
+
+max_order_hour_of_day = instacart %>% distinct(order_hour_of_day) %>% max()
+min_order_hour_of_day = instacart %>% distinct(order_hour_of_day) %>% min()
+  
+# sliderInput widget
+sliderInput("order_hour_range", label = h3("Choose order hour range"), min = min_order_hour_of_day, 
+        max = max_order_hour_of_day, value = c(0, 23))
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r box_chart}
+#the distribution of the order hour of the day for each department
+renderPlotly({
+instacart %>%
+   mutate(department = fct_reorder(department, order_hour_of_day)) %>%
+   plot_ly(x = ~department, y = ~order_hour_of_day, color = ~department,
+          colors = "Set2",
+          type = "box")
+})
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r bar_chart}
+#how many items are ordered in each department
+renderPlotly({
+instacart %>%
+  group_by(department) %>%
+  summarize(items_ordered = n()) %>%
+  mutate(department = fct_reorder(department, items_ordered)) %>% 
+  plot_ly(x = ~department, y = ~items_ordered, color = ~department, 
+          type = "bar")
+})
+```
+
+### Chart C
+
+```{r}
+
+```
+

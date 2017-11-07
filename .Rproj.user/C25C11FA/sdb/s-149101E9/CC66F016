@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Untitled\"\noutput: \n  flexdashboard::flex_dashboard:\n    orientation: row\n  runtime: shiny\n---\n\n```{r setup, include=FALSE}\nlibrary(flexdashboard)\n```\n\n```{r}\nlibrary(tidyverse)\nlibrary(janitor)\nlibrary(stringr)\nlibrary(forcats)\nlibrary(viridis)\nlibrary(plotly)\nlibrary(shiny)\n```\n\n```{r}\nairbnb_data = read_csv(\"../data/nyc_airbnb.zip\") %>%\n  clean_names() %>%\n  mutate(rating = review_scores_location / 2) %>%\n  select(boro = neighbourhood_group, neighbourhood, rating, price, room_type,\n         latitude, longitude) %>%\n  filter(!is.na(rating)) \n```\n\nColumn {.sidebar}\n-----------------------------------------------------------------------\n\n```{r}\nboros = airbnb_data %>% distinct(boro) %>% pull()\n\n# selectInput widget\nselectInput(\"boro_choice\", label = h3(\"Select boro\"),\n            choices = boros, selected = \"Manhattan\")\n\n\n\nmax_price = 1000\nmin_price = airbnb_data %>% distinct(price) %>% min()\n  \n# sliderInput widget\nsliderInput(\"price_range\", label = h3(\"Choose price range\"), min = min_price, \n        max = max_price, value = c(100, 400))\n\n\nroom_choice = airbnb_data %>% distinct(room_type) %>% pull()\n\n# radioButtons widget\nradioButtons(\"room_choice\", label = h3(\"Choose room type\"),\n    choices = room_choice, \n    selected = \"Entire home/apt\")\n```\n\nRow\n-----------------------------------------------------------------------\n\n### Chart A\n\n```{r}\nrenderPlotly({ \n  airbnb_data %>%\n  mutate(text_label = str_c(\"Price: $\", price, '\\nRating: ', rating)) %>% \n  plot_ly(x = ~longitude, y = ~latitude, type = \"scatter\", mode = \"markers\",\n          alpha = 0.5, \n          color = ~price,\n          text = ~text_label)\n})\n```\n\nRow {.tabset .tabset-fade}\n-----------------------------------------------------------------------\n\n### Chart B\n\n```{r}\n\n```\n\n### Chart C\n\n```{r}\n\n```\n\n",
+    "created" : 1510071061073.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4101851106",
+    "id" : "CC66F016",
+    "lastKnownWriteTime" : 1510072809,
+    "last_content_update" : 1510072809694,
+    "path" : "~/Documents/data_science/shinny_1106/shiny_dashboard_template.Rmd",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

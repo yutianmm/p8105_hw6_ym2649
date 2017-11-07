@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Untitled\"\noutput: \n  flexdashboard::flex_dashboard:\n    orientation: row\n  runtime: shiny\n---\n\n```{r setup, include=FALSE}\nlibrary(flexdashboard)\n```\n\n```{r read_library}\nlibrary(readr)\nlibrary(tidyverse)\nlibrary(janitor)\nlibrary(stringr)\nlibrary(forcats)\nlibrary(viridis)\nlibrary(plotly)\n```\n\n```{r clean_data}\ninstacart= read_csv(\"../data/instacart_train_data.csv.zip\",col_types=\"iiiiiciiiiciicc\") \n```\n\n\nColumn {.sidebar}\n-----------------------------------------------------------------------\n\n```{r}\ndepartments = instacart %>% distinct(instacart) %>% pull()\n\n# selectInput widget\nselectInput(\"department_choice\", label = h3(\"Select department\"),\n            choices = departments, selected = \"produce\")\n```\n\n\n\nRow\n-----------------------------------------------------------------------\n\n### Chart A\n\n```{r bar_chart}\n#the distribution of the order hour of the day for each department\ninstacart %>%\n   mutate(department = fct_reorder(department, order_hour_of_day)) %>%\n   plot_ly(x = ~department, y = ~order_hour_of_day, color = ~department,\n          colors = \"Set2\",\n          type = \"box\")\n```\n\nRow {.tabset .tabset-fade}\n-----------------------------------------------------------------------\n\n### Chart B\n\n```{r}\n#how many items are ordered in each department\ninstacart %>%\n  group_by(department) %>%\n  summarize(items_ordered = n()) %>%\n  mutate(department = fct_reorder(department, items_ordered)) %>% \n  plot_ly(x = ~department, y = ~items_ordered, color = ~department, \n          type = \"bar\")\n```\n\n### Chart C\n\n```{r}\n\n```\n\n",
+    "created" : 1510073824069.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2257461469",
+    "id" : "5F752002",
+    "lastKnownWriteTime" : 1510073832,
+    "last_content_update" : 1510073888090,
+    "path" : "~/Documents/data_science/p8105_hw6_ym2649/p2_shiny_dashboard.Rmd",
+    "project_path" : "p2_shiny_dashboard.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

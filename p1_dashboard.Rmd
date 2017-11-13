@@ -57,5 +57,4 @@ instacart %>%
 ### Chart C
 
 ```{r}
-
 ```

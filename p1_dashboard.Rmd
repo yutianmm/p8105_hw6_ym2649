@@ -56,5 +56,13 @@ instacart %>%
 
 ### Chart C
 
-```{r}
+```{r scatter}
+#how many items are ordered in "produce" department in each hour of the day
+instacart %>%
+  filter(department == "produce") %>%
+  group_by(order_hour_of_day) %>%
+  summarize(items_ordered = n())  %>% 
+  arrange(order_hour_of_day, items_ordered) %>% 
+  mutate(items_ordered_produce = items_ordered)%>%
+  plot_ly(x = ~order_hour_of_day, y = ~items_ordered_produce, type = "scatter", mode = "markers") 
 ```

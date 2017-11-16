@@ -53,6 +53,8 @@ Row
 #the distribution of the order hour of the day for each department
 renderPlotly({
 instacart %>%
+    filter(department == input$department_choice, 
+          order_hour_of_day %in% input$order_hour_range[1]:input$order_hour_range[2]) %>%
    mutate(department = fct_reorder(department, order_hour_of_day)) %>%
    plot_ly(x = ~department, y = ~order_hour_of_day, color = ~department,
           colors = "Set2",
@@ -69,6 +71,8 @@ Row {.tabset .tabset-fade}
 #how many items are ordered in each department
 renderPlotly({
 instacart %>%
+    filter(department == input$department_choice, 
+          order_hour_of_day %in% input$order_hour_range[1]:input$order_hour_range[2]) %>%
   group_by(department) %>%
   summarize(items_ordered = n()) %>%
   mutate(department = fct_reorder(department, items_ordered)) %>% 
@@ -79,14 +83,17 @@ instacart %>%
 
 ### Chart C
 
-```{r}
+```{r line_plot}
 #how many items are ordered in different departments in each hour of the day
 renderPlotly({
   instacart %>%
+     filter(department == input$department_choice, 
+          order_hour_of_day %in% input$order_hour_range[1]:input$order_hour_range[2]) %>%
   group_by(department,order_hour_of_day) %>%
   summarize(items_ordered = n())  %>% 
   mutate(text_label = str_c("Department: ", department)) %>%
   plot_ly(x = ~order_hour_of_day, y = ~items_ordered, color = ~department, type = "scatter", mode = "lines", text = ~text_label)  
 })
 ```
+
 

@@ -80,6 +80,13 @@ instacart %>%
 ### Chart C
 
 ```{r}
-
+#how many items are ordered in different departments in each hour of the day
+renderPlotly({
+  instacart %>%
+  group_by(department,order_hour_of_day) %>%
+  summarize(items_ordered = n())  %>% 
+  mutate(text_label = str_c("Department: ", department)) %>%
+  plot_ly(x = ~order_hour_of_day, y = ~items_ordered, color = ~department, type = "scatter", mode = "lines", text = ~text_label)  
+})
 ```
 
